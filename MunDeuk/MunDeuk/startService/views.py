@@ -125,5 +125,5 @@ def members_update(request):
                 member.save()
             except MemberInfo.DoesNotExist:
                 return Response({"error": "Member not found"}, status=status.HTTP_404_NOT_FOUND)
-            return Response({"success": "Members updated successfully"}, status=status.HTTP_200_OK)
-        return Response({"error": "Invalid request"}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"success": "Members updated successfully"}, status=status.HTTP_200_OK)
+    return Response({"error": "Invalid request"}, status=status.HTTP_400_BAD_REQUEST)
