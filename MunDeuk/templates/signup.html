@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>새 회원 추가</title>
+</head>
+<body>
+    <h1>새 회원 추가</h1>
+    <form id="frm" method="post" action="{% url 'signup-ajax' %}">
+        {% csrf_token %}
+        <label for="nickName">닉네임:</label><br>
+        <input type="text" id="nickName" name="nickName" required><br><br>
+
+        <label for="email">이메일:</label><br>
+        <input type="email" id="email" name="email" required><br><br>
+
+        <label for="password">비밀번호:</label><br>
+        <input type="password" id="password" name="password" required><br><br>
+
+<!--        <label for="memberAuth">회원 권한:</label><br>-->
+<!--        <select id="memberAuth" name="memberAuth" required>-->
+<!--            <option value="USER">사용자</option>-->
+<!--            <option value="ADMIN">관리자</option>-->
+<!--            <option value="GUEST">게스트</option>-->
+<!--        </select><br><br>-->
+
+<!--        <label for="memberState">회원 상태:</label><br>-->
+<!--        <select id="memberState" name="memberState" required>-->
+<!--            <option value="A">활성</option>-->
+<!--            <option value="I">비활성</option>-->
+<!--            <option value="B">차단됨</option>-->
+<!--        </select><br><br>-->
+
+        <button type="button" onclick="fn_signup()">제출</button>
+    </form>
+    <script>
+        function fn_signup(){
+            event.preventDefault();
+
+            const form = document.getElementById('frm');
+            const formData = new FormData(form);
+            const data = {
+                nickName: formData.get('nickName'),
+                email: formData.get('email'),
+                password: formData.get('password')
+<!--                memberAuth: formData.get('memberAuth'),-->
+<!--                memberState: formData.get('memberState')-->
+            };
+
+            fetch('/members/signup/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+                window.location.href = '/login';
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+        }
+    </script>
+</body>
+</html>

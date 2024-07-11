@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>MunDeuk</title>
+</head>
+<body>
+<h1>로그인 페이지</h1>
+<form id="frm" method="post" action="{% url 'login-ajax' %}">
+    {% csrf_token %}
+    <label for="email">이메일:</label><br>
+    <input type="email" id="email" name="email" required><br><br>
+
+    <label for="password">비밀번호:</label><br>
+    <input type="password" id="password" name="password" required><br><br>
+
+</form>
+
+<button type="button" onclick="fn_login()">로그인</button>
+<button type="button" onclick="fn_signUp()">회원가입</button>
+
+<script>
+    function fn_login(){
+            event.preventDefault();
+
+            const form = document.getElementById('frm');
+            const formData = new FormData(form);
+            const data = {
+                email: formData.get('email'),
+                password: formData.get('password')
+            };
+
+            fetch('/member/login/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify(data)
+            })
+<!--            .then(response => response.json())-->
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else if (response.status === 401) {
+                    throw new Error('Unauthorized');
+                } else if (response.status === 400) {
+                    return response.json().then(data => { throw new Error(data); });
+                } else {
+                    throw new Error('Network response was not ok');
+                }
+            })
+            .then(data => {
+                console.log('Success:', data);
+                window.location.href = '/';
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+        }
+
+    function fn_signUp(){
+        location.href = "/signup";
+    }
+</script>
+</body>
+</html>
