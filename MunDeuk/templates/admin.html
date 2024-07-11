@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MunDeuk</title>
+</head>
+<body>
+    <h1>Manage User</h1>
+    <form id="frm">
+        {% csrf_token %}
+    <div>
+        <table>
+            <thead>
+                <tr>
+                    <td>userId</td>
+                    <td>nickName</td>
+                    <td>email</td>
+                    <td>memberAuth</td>
+                    <td>memberState</td>
+                </tr>
+            </thead>
+            <tbody>
+<!--            <c:foreach var="member" items="${members}">같은 느낌 -->
+                {% for member in members %}
+                <tr>
+                    <td aria-readonly="true">{{ member.id }}</td>
+                    <td aria-readonly="true">{{ member.nickName }}</td>
+                    <td aria-readonly="true">{{ member.email }}</td>
+                    <td>
+                        <span class="memberAuth">{{ member.memberAuth }}</span>
+                        <select class="memberAuthSelect" style="display:none;">
+                            <option value="USER" {% if member.memberAuth == "USER" %}selected{% endif %}>User</option>
+                            <option value="ADMIN" {% if member.memberAuth == "ADMIN" %}selected{% endif %}>Admin</option>
+                        </select>
+                    </td>
+                    <td>
+                        <span class="memberState">{{ member.memberState }}</span>
+                        <select class="memberStateSelect" style="display:none;">
+                            <option value="A" {% if member.memberState == "A" %}selected{% endif %}>Active</option>
+                            <option value="I" {% if member.memberState == "I" %}selected{% endif %}>Inactive</option>
+                            <option value="B" {% if member.memberState == "B" %}selected{% endif %}>Banned</option>
+                        </select>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div>
+        <div>
+            <button id="update" type="button" onclick="fn_update()">수정하기</button>
+        </div>
+        <div>
+            <button id="accept" type="button" style="display:none;" onclick="fn_accept()">적용하기</button>
+            <button id="cancel" type="button" style="display:none;" onclick="fn_cancel()">취소</button>
+        </div>
+    </div>
+    </form>
+<script>
+    function fn_update(){
+        document.getElementById('update').style.display = 'none';
+        document.getElementById('accept').style.display = 'inline-flex';
+        document.getElementById('cancel').style.display = 'inline-flex';
+
+        var memberAuthSpans = document.querySelectorAll('.memberAuth');
+        var memberAuthSelects = document.querySelectorAll('.memberAuthSelect');
+        var memberStateSpans = document.querySelectorAll('.memberState');
+        var memberStateSelects = document.querySelectorAll('.memberStateSelect');
+
+        memberAuthSpans.forEach(function(span) {
+            span.style.display = 'none';
+        });
+        memberAuthSelects.forEach(function(select) {
+            select.style.display = 'inline-block';
+        });
+        memberStateSpans.forEach(function(span) {
+            span.style.display = 'none';
+        });
+        memberStateSelects.forEach(function(select) {
+            select.style.display = 'inline-block';
+        });
+    }
+
+    function fn_cancel(){
+        document.getElementById('update').style.display = 'block';
+        document.getElementById('accept').style.display = 'none';
+        document.getElementById('cancel').style.display = 'none';
+
+        var memberAuthSpans = document.querySelectorAll('.memberAuth');
+        var memberAuthSelects = document.querySelectorAll('.memberAuthSelect');
+        var memberStateSpans = document.querySelectorAll('.memberState');
+        var memberStateSelects = document.querySelectorAll('.memberStateSelect');
+
+        memberAuthSpans.forEach(function(span) {
+            span.style.display = 'inline-block';
+        });
+        memberAuthSelects.forEach(function(select) {
+            select.style.display = 'none';
+        });
+        memberStateSpans.forEach(function(span) {
+            span.style.display = 'inline-block';
+        });
+        memberStateSelects.forEach(function(select) {
+            select.style.display = 'none';
+        });
+    }
+
+    function fn_accept() {
+        var form = document.getElementById('frm');
+        var formData = new FormData(form);
+
+        var data = [];
+        var rows = document.querySelectorAll('tbody tr');
+
+        rows.forEach(function(row) {
+            var id = row.cells[0].innerText;
+            var memberAuth = row.querySelector('.memberAuthSelect').value;
+            var memberState = row.querySelector('.memberStateSelect').value;
+            data.push({
+                id: id,
+                memberAuth: memberAuth,
+                memberState: memberState
+            });
+        });
+
+        fetch('/members/update/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error('Network response was not ok');
+            }
+        })
+        .then(data => {
+            console.log('Success:', data);
+            alert('수정 성공: ' + data.success);
+            window.location.href = '/members/list/';
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+            alert('수정 실패: ' + error.message);
+        });
+
+
+        // 변경 후 다시 원래 상태로 복구
+        fn_cancel();
+    }
+</script>
+</body>
+</html>
