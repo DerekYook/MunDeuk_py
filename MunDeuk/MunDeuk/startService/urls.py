@@ -1,7 +1,11 @@
 from django.urls import path
-from .views import index, UserListView # class가져오기
+# from .views import index, signup, UserListView, food_list # class가져오기
+from .views import *
 
 urlpatterns = [
     path('', index, name='index'),
-    path('api/users/', UserListView.as_view(), name='user-list'),
+    path('login/', member_login, name='login'),
+    path('member/login/', member_login_ajax, name='login-ajax'),
+    path('signup/', member_signup, name='signup'),
+    path('members/signup/', member_signup_ajax, name='signup-ajax'),
 ]

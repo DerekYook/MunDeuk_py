@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'rest_framework',
     # app 추가
     'MunDeuk.startService',
+    # drf_yasg 추가
+    'drf_yasg',
 ]
 
 MIDDLEWARE = [
@@ -59,7 +61,7 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
             # template 추가
-            os.path.join(TEMPLATES_DIR, 'templates')
+            os.path.join(TEMPLATES_DIR, '../templates')
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -126,6 +128,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Pagination
 REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10
 }
