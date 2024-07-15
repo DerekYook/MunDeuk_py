@@ -12,12 +12,16 @@ class MemberSerializer(serializers.ModelSerializer):
 class VerifyMember(serializers.ModelSerializer):
     class Meta:
         model = MemberInfo
-        fields = ['email', 'password']
+        fields = ['id', 'email', 'password']
 
 
 class MembersList(serializers.ModelSerializer):
-
     class Meta:
         model = MemberInfo
         fields = ['id', 'nickName', 'email', 'memberAuth', 'memberState']
+
+
+class LoginSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    password = serializers.CharField()
 
