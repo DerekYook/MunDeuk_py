@@ -132,8 +132,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTHENTICATION_BACKENDS = [
     # Custom Email Backend
     'MunDeuk.startService.addon.JWTAuthentication.EmailBackend',
+    # 'startService.authentication.EmailBackend',
     # 기본 Backend
-    'django.contrib.auth.backends.ModelBackend',
+    # 'django.contrib.auth.backends.ModelBackend',
 ]
 
 REST_FRAMEWORK = {
@@ -143,8 +144,8 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 10,
     # 인증 클래스 적용
     'DEFAULT_AUTHENTICATION_CLASSES': (
+        # 'startService.authentication.JWTAuthentication',
         'MunDeuk.startService.addon.JWTAuthentication.JWTAuthentication',
-        'MunDeuk.startService.addon.JWTAuthentication.EmailBackend',
     ),
 }
 
