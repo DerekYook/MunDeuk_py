@@ -40,14 +40,32 @@
             })
 <!--            .then(response => response.json())-->
             .then(response => {
+<!--                if (response.ok) {-->
+<!--                    const response_json = response.json()-->
+<!--                    console.log(response_json)-->
+<!--                    localStorage.setItem("access", response_json.access)-->
+<!--                    localStorage.setItem("refresh", response_json.refresh)-->
+
+<!--                    const base64Url = response_json.access.split('.')[1];-->
+<!--                    const base64 = base64Url.replace(/-/g, '+').replace(/_/g,'/');-->
+<!--                    const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {-->
+<!--                        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);-->
+<!--                    }).join(''));-->
+
+<!--                    localStorage.setItem("payload",jsonPayload);-->
+
+<!--                    return response.json();-->
+<!--                } else if (response.status === 401) {-->
+<!--                    throw new Error('Unauthorized');-->
+<!--                } else if (response.status === 400) {-->
+<!--                    return response.json().then(data => { throw new Error(data); });-->
+<!--                } else {-->
+<!--                    throw new Error('Network response was not ok');-->
+<!--                }-->
                 if (response.ok) {
                     return response.json();
-                } else if (response.status === 401) {
-                    throw new Error('Unauthorized');
-                } else if (response.status === 400) {
-                    return response.json().then(data => { throw new Error(data); });
                 } else {
-                    throw new Error('Network response was not ok');
+                    throw new Error('Login failed');
                 }
             })
             .then(data => {

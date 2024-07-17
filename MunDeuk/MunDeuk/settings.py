@@ -10,11 +10,13 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 import os
+from datetime import timedelta
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 TEMPLATES_DIR = BASE_DIR / "MunDeuk"
+ADD_ON_DIR = BASE_DIR / "MunDeuk" / "MunDeuk" / "startService"
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
@@ -42,6 +44,7 @@ INSTALLED_APPS = [
     'MunDeuk.startService',
     # drf_yasg 추가
     'drf_yasg',
+    'jwt',
 ]
 
 MIDDLEWARE = [
@@ -126,9 +129,25 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Pagination
+AUTHENTICATION_BACKENDS = [
+    # Custom Email Backend
+    'MunDeuk.startService.addon.JWTAuthentication.EmailBackend',
+    # 'startService.authentication.EmailBackend',
+    # 기본 Backend
+    # 'django.contrib.auth.backends.ModelBackend',
+]
+
 REST_FRAMEWORK = {
+    # Pagination
     'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 10
+    'PAGE_SIZE': 10,
+    # 인증 클래스 적용
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        # 'startService.authentication.JWTAuthentication',
+        'MunDeuk.startService.addon.JWTAuthentication.JWTAuthentication',
+    ),
 }
+
+AUTH_USER_MODEL = 'startService.MemberInfo'
+
