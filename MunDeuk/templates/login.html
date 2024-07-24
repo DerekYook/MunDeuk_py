@@ -34,12 +34,13 @@
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRFToken': '{{ csrf_token }}'
+                    'X-CSRFToken': '{{ csrf_token }}',
+<!--                    'Authorization': `Bearer ${access_token}`,-->
                 },
+                credentials: 'include', // 중요 : 쿠키 포함
                 body: JSON.stringify(data)
             })
 <!--            .then(response => response.json())-->
-            .then(response => {
 <!--                if (response.ok) {-->
 <!--                    const response_json = response.json()-->
 <!--                    console.log(response_json)-->
@@ -62,6 +63,7 @@
 <!--                } else {-->
 <!--                    throw new Error('Network response was not ok');-->
 <!--                }-->
+            .then(response => {
                 if (response.ok) {
                     return response.json();
                 } else {
