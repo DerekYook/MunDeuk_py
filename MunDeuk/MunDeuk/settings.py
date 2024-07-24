@@ -58,6 +58,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'MunDeuk.startService.middleware.middleware.JWTAuthMiddleware',
 ]
 
 ROOT_URLCONF = 'MunDeuk.urls'
@@ -134,10 +135,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTHENTICATION_BACKENDS = [
     # Custom Email Backend
-    'MunDeuk.startService.addon.JWTAuthentication.EmailBackend',
+    # 'MunDeuk.startService.addon.JWTAuthentication.EmailBackend',
     # 'startService.authentication.EmailBackend',
     # 기본 Backend
-    # 'django.contrib.auth.backends.ModelBackend',
+    'django.contrib.auth.backends.ModelBackend',
 ]
 
 REST_FRAMEWORK = {
@@ -148,7 +149,7 @@ REST_FRAMEWORK = {
     # 인증 클래스 적용
     'DEFAULT_AUTHENTICATION_CLASSES': (
         # 'startService.authentication.JWTAuthentication',
-        'MunDeuk.startService.addon.JWTAuthentication.JWTAuthentication',
+        # 'MunDeuk.startService.addon.JWTAuthentication.JWTAuthentication',
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
 }
@@ -185,7 +186,8 @@ SIMPLE_JWT = {
     "SLIDING_TOKEN_LIFETIME": timedelta(minutes=5),
     "SLIDING_TOKEN_REFRESH_LIFETIME": timedelta(days=1),
 
-    "TOKEN_OBTAIN_SERIALIZER": "rest_framework_simplejwt.serializers.TokenObtainPairSerializer",
+    # "TOKEN_OBTAIN_SERIALIZER": "rest_framework_simplejwt.serializers.TokenObtainPairSerializer",
+    "TOKEN_OBTAIN_SERIALIZER": "MunDeuk.startService.serializers.CustomTokenObtainPairSerializer",
     "TOKEN_REFRESH_SERIALIZER": "rest_framework_simplejwt.serializers.TokenRefreshSerializer",
     "TOKEN_VERIFY_SERIALIZER": "rest_framework_simplejwt.serializers.TokenVerifySerializer",
     "TOKEN_BLACKLIST_SERIALIZER": "rest_framework_simplejwt.serializers.TokenBlacklistSerializer",
@@ -194,4 +196,3 @@ SIMPLE_JWT = {
 }
 
 AUTH_USER_MODEL = 'startService.MemberInfo'
-

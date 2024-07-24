@@ -7,8 +7,11 @@ urlpatterns = [
     path('login/', member_login, name='login'),
     # path('member/login/', member_login_ajax, name='login-ajax'),
     path('member/login/', LoginAPIView.as_view(), name='login-ajax'),
+    path('refresh', CustomTokenRefreshView.as_view(), name='useRefresh'),
     path('signup/', member_signup, name='signup'),
     path('members/signup/', member_signup_ajax, name='signup-ajax'),
     path('members/list/', members_list, name='members-list'),
-    path('members/update/', members_update, name='members-update')
+    path('members/update/', members_update, name='members-update'),
+    path('logout', LogoutAPIView.as_view(), name='logout'),
+
 ]
