@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'drf_yasg',
     'rest_framework_simplejwt',
     'jwt',
+    'oauth2_provider',
 ]
 
 REST_FRAMEWORK = True

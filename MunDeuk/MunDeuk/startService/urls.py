@@ -1,4 +1,5 @@
-from django.urls import path
+from django.urls import path, include
+from oauth2_provider import urls as oauth2_urls
 # from .views import index, signup, UserListView, food_list # class가져오기
 from .views import *
 
@@ -13,5 +14,6 @@ urlpatterns = [
     path('members/list/', members_list, name='members-list'),
     path('members/update/', members_update, name='members-update'),
     path('logout', LogoutAPIView.as_view(), name='logout'),
+    path('o/', include(oauth2_urls)),
 
 ]
