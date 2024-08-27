@@ -45,6 +45,8 @@ from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
 import time
 
+from openpyxl import Workbook
+
 # 크롬 드라이버 설정
 driver = webdriver.Chrome()
 # service = Service(ChromeDriverManager(chrome_type="google").install())
@@ -66,6 +68,8 @@ try:
 
     # 모든 `mnemitem_grid_lst` 요소 찾기
     grid_elements = driver.find_elements(By.CLASS_NAME, "mnemitem_grid_item")
+    count = 0
+    datas = []
 
     # 각 그리드 요소 내에서 필요한 정보 추출
     for grid in grid_elements:
@@ -106,15 +110,42 @@ try:
         except:
             unit_price = "단위 가격 정보 없음"
 
+        count += 1
+
         # 추출한 데이터 출력
-        print(f"브랜드명: {brand}")
-        print(f"상품명: {title}")
-        if price == "가격 정보 없음":
-            print(f"가격: {price}")
+        if brand != "브랜드 정보 없음" and title != "상품명 정보 없음" and price != "가격 정보 없음":
+            print(f"#: {count}")
+            print(f"브랜드명: {brand}")
+            print(f"상품명: {title}")
+            if price == "가격 정보 없음":
+                print(f"가격: {price}")
+            else:
+                print(f"가격: {price}원")
+            print(f"단위 가격: {unit_price}")
+            print("------------------------------")
+            # excel로 저장할 데이터 생성
+            datas.append([count, brand, title, price, unit_price])
         else:
-            print(f"가격: {price}원")
-        print(f"단위 가격: {unit_price}")
-        print("------------------------------")
+            if unit_price != "단위 가격 정보 없음":
+                print(f"#: {count}")
+                print(f"브랜드명: {brand}")
+                print(f"상품명: {title}")
+                if price == "가격 정보 없음":
+                    print(f"가격: {price}")
+                else:
+                    print(f"가격: {price}원")
+                print(f"단위 가격: {unit_price}")
+                print("------------------------------")
+                # excel로 저장할 데이터 생성
+                datas.append([count, brand, title, price, unit_price])
+
+    # excel 저장
+    write_wb = Workbook()
+    write_ws = write_wb.create_sheet('result')
+    for data in datas:
+        write_ws.append(data)
+
+    write_wb.save(r'd:/howmuch.xlsx')
 
 finally:
 
